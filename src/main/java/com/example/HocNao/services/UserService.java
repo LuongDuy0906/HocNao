@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.HocNao.dto.UserGetDTO;
-import com.example.HocNao.dto.UserPostDTO;
+import com.example.HocNao.dto.userDTO.UserGetDTO;
+import com.example.HocNao.dto.userDTO.UserPostDTO;
 import com.example.HocNao.models.User;
 import com.example.HocNao.repositories.UserRepository;
 

@@ -1,4 +1,4 @@
-package com.example.HocNao.dto;
+package com.example.HocNao.dto.userDTO;
 
 import com.example.HocNao.models.User;
 
