@@ -8,6 +8,7 @@ import com.example.HocNao.services.QuizzService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -26,12 +27,12 @@ public class QuizzController {
 
     @Operation(summary = "Lấy danh sách tất cả câu hỏi trên hệ thống", description = "Trả về danh sách tất cả câu hỏi trên hệ thống")
     @GetMapping("/")
-    public ResponseEntity<?> getAllQuizzes() {
+    public ResponseEntity<?> getAllQuizzes(HttpServletRequest request) {
         List<QuizzGetDTO> response = new ArrayList<>();
 
         try {
             response = quizzService.getAllQuizzes();
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(request.getSession().getId(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

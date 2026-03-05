@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.HocNao.dto.quizzDTO.QuizzGetDTO;
+import com.example.HocNao.dto.quizzDTO.QuizzPostDTO;
 import com.example.HocNao.models.Quizz;
 import com.example.HocNao.repositories.QuizzRepository;
 
@@ -24,5 +25,14 @@ public class QuizzService {
             quizzGetDTOs.add(new QuizzGetDTO(quizz));
         }
         return quizzGetDTOs;
+    }
+
+    public QuizzGetDTO createQuizz(QuizzPostDTO quizzPostDTO) {
+        Quizz newQuizz = new Quizz();
+
+        newQuizz.setTitle(quizzPostDTO.getTitle());
+
+        QuizzGetDTO savedQuizz = new QuizzGetDTO(quizzRepository.save(newQuizz));
+        return savedQuizz;
     }
 }
