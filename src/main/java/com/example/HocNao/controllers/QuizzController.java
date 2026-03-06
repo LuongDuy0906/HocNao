@@ -32,7 +32,7 @@ public class QuizzController {
 
         try {
             response = quizzService.getAllQuizzes();
-            return new ResponseEntity<>(request.getSession().getId(), HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
