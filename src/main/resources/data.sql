@@ -1,0 +1,1 @@
+INSERT IGNORE INTO user (username, email, password) VALUES ('Duy', 'duy@gmail.com', '123456');

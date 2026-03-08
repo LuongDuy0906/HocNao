@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.HocNao.dto.userDTO.UserGetDTO;
 import com.example.HocNao.dto.userDTO.UserPostDTO;
-import com.example.HocNao.services.UserService;
+import com.example.HocNao.services.AuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/users")
 @Tag(name = "User Controller", description = "Nhóm API dành cho quản lý người dùng")
 public class UserController {
-    private final UserService userService;
+    private final AuthService userService;
 
     @Operation(summary = "Lấy danh sách tất cả người dùng", description = "Trả về danh sách tất cả người dùng trong hệ thống")
     @GetMapping("/")
