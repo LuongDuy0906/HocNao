@@ -1,5 +1,7 @@
 package com.example.HocNao.dto.userDTO;
 
+import com.example.HocNao.type.UserRole;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -16,4 +18,6 @@ public class UserPostDTO {
 
     @NotBlank(message = "Mật khẩu không được để trống")
     private String password;
+
+    private UserRole role;
 }
