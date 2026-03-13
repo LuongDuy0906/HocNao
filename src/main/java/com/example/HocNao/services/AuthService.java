@@ -1,16 +1,15 @@
 package com.example.HocNao.services;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.naming.NameNotFoundException;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import com.example.HocNao.dto.userDTO.UserGetDTO;
-import com.example.HocNao.dto.userDTO.UserPostDTO;
+import com.example.HocNao.dto.authDTO.LoginDTO;
 import com.example.HocNao.models.User;
 import com.example.HocNao.repositories.UserRepository;
-import com.example.HocNao.type.UserRole;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,31 +17,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthService {
     private final UserRepository userRepository;
+    private final AuthenticationManager authManager;
+    private final JWTService jwtService;
 
-    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+    public String login(LoginDTO loginDTO) throws NameNotFoundException {
+        User existUser = userRepository.findByEmail(loginDTO.getEmail())
+                .orElseThrow(() -> new NameNotFoundException("Khong tim thay nguoi dung"));
 
-    public List<UserGetDTO> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        List<UserGetDTO> userDTOs = new ArrayList<>();
+        Authentication authentication = authManager
+                .authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
 
-        for (User user : users) {
-            userDTOs.add(new UserGetDTO(user));
+        if (authentication.isAuthenticated()) {
+            return jwtService.generatedToken(existUser.getUsername());
         }
 
-        return userDTOs;
-    }
-
-    public UserGetDTO createUser(UserPostDTO userPostDTO) {
-        User user = new User();
-        user.setUsername(userPostDTO.getUsername());
-        user.setEmail(userPostDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(userPostDTO.getPassword()));
-        if (userPostDTO.getRole() != null) {
-            user.setRole(userPostDTO.getRole());
-        } else {
-            user.setRole(UserRole.USER);
-        }
-        UserGetDTO newUser = new UserGetDTO(userRepository.save(user));
-        return newUser;
+        return "failed";
     }
 }
