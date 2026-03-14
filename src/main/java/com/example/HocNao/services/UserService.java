@@ -33,6 +33,10 @@ public class UserService {
     }
 
     public UserGetDTO createUser(UserPostDTO userPostDTO) {
+        if (userRepository.findByEmail(userPostDTO.getEmail()).isPresent()) {
+            throw new RuntimeException("Email da duoc su dung");
+        }
+
         User user = new User();
         user.setUsername(userPostDTO.getUsername());
         user.setEmail(userPostDTO.getEmail());

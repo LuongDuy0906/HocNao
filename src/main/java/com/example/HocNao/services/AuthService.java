@@ -8,6 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.example.HocNao.dto.authDTO.LoginDTO;
+import com.example.HocNao.dto.userDTO.UserGetDTO;
+import com.example.HocNao.dto.userDTO.UserPostDTO;
 import com.example.HocNao.models.User;
 import com.example.HocNao.repositories.UserRepository;
 
@@ -19,6 +21,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final AuthenticationManager authManager;
     private final JWTService jwtService;
+    private final UserService userService;
 
     public String login(LoginDTO loginDTO) throws NameNotFoundException {
         User existUser = userRepository.findByEmail(loginDTO.getEmail())
@@ -32,5 +35,11 @@ public class AuthService {
         }
 
         return "failed";
+    }
+
+    public String register(UserPostDTO userPostDTO) {
+        UserGetDTO savedUser = userService.createUser(userPostDTO);
+
+        return jwtService.generatedToken(savedUser.getUsername());
     }
 }
