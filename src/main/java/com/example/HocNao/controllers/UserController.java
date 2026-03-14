@@ -7,11 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.HocNao.dto.userDTO.ChangePasswordDTO;
 import com.example.HocNao.dto.userDTO.UserGetDTO;
 import com.example.HocNao.dto.userDTO.UserPostDTO;
 import com.example.HocNao.services.UserService;
@@ -30,7 +32,7 @@ public class UserController {
 
     @Operation(summary = "Lấy danh sách tất cả người dùng", description = "Trả về danh sách tất cả người dùng trong hệ thống")
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<?> getAllUsers() {
         List<UserGetDTO> userDTOs = new ArrayList<>();
         try {
@@ -42,12 +44,26 @@ public class UserController {
     }
 
     @Operation(summary = "Tạo người dùng mới", description = "Tạo một người dùng mới với thông tin được cung cấp")
-    @PostMapping("/")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserPostDTO userPostDTO) {
         UserGetDTO newUser;
         try {
             newUser = userService.createUser(userPostDTO);
             return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "Cập nhật mật khẩu", description = "API giúp người dùng có thể thay đổi mật khẩu")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PatchMapping("/changePassword")
+    public ResponseEntity<?> ChangePassword(ChangePasswordDTO changePasswordDTO) {
+        String response;
+        try {
+            response = userService.changePassword(changePasswordDTO);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
